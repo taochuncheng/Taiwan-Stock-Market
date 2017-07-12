@@ -19,15 +19,12 @@ def soupify( urlLink ):
     sp = bs(req.content, "html.parser")
     return sp
 
-newsList = {}
-
 for link in links:
     for h in soupify(link).find("div", {"class":"NewsList"}).find_all("h3"):
         for each in h.find_all("a"):
             if each.get("href") != None:
                 print ("*" * 20)
                 print ("{}: {}{}".format(each.text, heading, each.get("href")))
-                newsList[each.text] = heading + each.get("href")
                 for ps in soupify(heading + each.get("href")).find_all("p"):
                     print (ps.text)
     
