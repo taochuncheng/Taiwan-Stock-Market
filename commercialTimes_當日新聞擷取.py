@@ -1,9 +1,6 @@
 #-*-coding: utf-8-*-
 import requests
 from bs4 import BeautifulSoup as bs
-import time
-
-news = ["http://news.cnyes.com/news/cat/tw_stock_news"]
 
 links = ["http://ctee.com.tw/News/ListCateNews.aspx?cateid=tg&page=1",
         "http://ctee.com.tw/News/ListCateNews.aspx?cateid=ggce&page=1",
@@ -11,8 +8,6 @@ links = ["http://ctee.com.tw/News/ListCateNews.aspx?cateid=tg&page=1",
         "http://ctee.com.tw/News/ListCateNews.aspx?cateid=cjzc&page=1"]
 
 heading = "http://ctee.com.tw/News/"
-
-today = time.strftime("%Y/%m/%d", time.localtime())
 
 def soupify( urlLink ):
     req = requests.get(urlLink)
