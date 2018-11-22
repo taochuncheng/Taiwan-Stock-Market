@@ -1,6 +1,6 @@
 ''#-*- coding: utf-8 -*-''
-import csv, requests, os, sys, time, winsound
-from time import strftime, gmtime
+import csv, requests, os, sys, winsound
+from time import strftime, gmtime, sleep, localtime
 from bs4 import BeautifulSoup
 
 head = {
@@ -44,7 +44,7 @@ def taiex():
 def msci_grab():
     msci_website = "https://app2.msci.com/eqb/custom_indexes/tw_performance.html"
     msci_ary, msci_list = [], []
-    n = website_grab(msci_website)
+    n = BeautifulSoup(requests.get(msci_website).content, "html.parser")
     for tds in n.find_all("td")[8:-52]:
         if len(msci_list) == 11:
             msci_list.append(tds.text)
@@ -75,7 +75,7 @@ def previous_day():
     "firstin" : "1",
     "off" : "1",
     "TYPEK" : "all",
-    "year" : "107",
+    "year" : int((strftime("%Y", gmtime())))-1911,
     "month" : (strftime("%m", gmtime())),
     "day" : int((strftime("%d", gmtime())))-1
             }
@@ -114,7 +114,8 @@ def filter_list( here):
                     here.remove(each)
                     x -= 1
     return here
-
+        
+    
 #公開資訊觀測站抓公告
 def announcement_grabber():
     today = "http://mops.twse.com.tw/mops/web/t05sr01_1"
@@ -152,8 +153,7 @@ def sorted_list_output( list_to_sort, which_list):
     return fp
 
 #Load all lists here and clean up unwanted announcements
-include_words = ["庫藏股", "除權","除息","配股","配息","配發","分派", "派發", "分配"
-                 , "調整","基準","股利", "股息", "股東會", "法人", "增資" ]
+include_words = ["庫藏股", "除權","除息","配股","配息","配發","分派", "派發", "分配", "調整","基準","股利", "股息", "股東會", "法人", "增資" ]
 msci_list = msci_grab()
 taiex_list = taiex()
 t_minus1 = filter_list(previous_day())
@@ -169,13 +169,13 @@ yesterday_list_output(sorted_list_output(t_minus1Day, msci_list))
 print ("\n昨日大台")
 yesterday_list_output(sorted_list_output(t_minus1Day, taiex_list))
 
-
-print ("\n" + "*" * 50)
-print (strftime("%a, %d %b %Y %H:%M:%S", gmtime()))
-print ("今日摩台")
-today_list_output(sorted_list_output(tDay, msci_list))
-print ("\n今日大台")
-today_list_output(sorted_list_output(tDay, taiex_list))
-
-
-
+'''
+while True:
+    print ("\n" + "*" * 50)
+    print (strftime("%a, %d %b %Y %H:%M:%S", gmtime()))
+    print ("今日摩台")
+    today_list_output(sorted_list_output(tDay, msci_list))
+    print ("\n今日大台")
+    today_list_output(sorted_list_output(tDay, taiex_list))
+    sleep(300)
+'''
